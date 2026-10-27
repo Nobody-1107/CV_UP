@@ -96,8 +96,20 @@ p { margin: 0; }
 .count b { display: block; font-family: var(--display); font-size: 1.6rem; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }
 .count span { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hero-muted); }
 .reg-cta { display: grid; gap: 6px; justify-items: start; }
-.reg-note { font-size: 0.82rem; color: #fbbf24; max-width: 26ch; }
 @media (max-width: 980px) { .evento-in { grid-template-columns: minmax(0, 1fr); } }
+
+
+.qr-modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px; background: rgba(7,11,21,0.72); }
+.qr-modal[hidden] { display: none; }
+.qr-card { position: relative; width: 100%; max-width: 380px; max-height: 100%; overflow-y: auto; background: var(--surface); color: var(--ink); border-radius: 18px; padding: 28px 24px 24px; display: grid; gap: 12px; justify-items: center; text-align: center; box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6); }
+.qr-card h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.qr-card .eyebrow { color: var(--p2); }
+.qr-card img { display: block; width: min(260px, 100%); height: auto; background: #fff; padding: 10px; border-radius: 12px; border: 1px solid var(--line); image-rendering: pixelated; }
+.qr-help { color: var(--muted); font-size: 0.92rem; }
+.qr-link { justify-content: center; }
+.qr-close { position: absolute; top: 10px; right: 12px; width: 36px; height: 36px; border-radius: 50%; border: 0; background: transparent; color: var(--muted); font-size: 1.6rem; line-height: 1; cursor: pointer; }
+.qr-close:hover { background: var(--code-bg); color: var(--ink); }
+button.btn { border: 0; cursor: pointer; font-family: inherit; }
 
 /* ---------- hero ---------- */
 .hero-top { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 400px); gap: clamp(24px, 5vw, 64px); align-items: center; }
@@ -325,6 +337,16 @@ footer b { color: var(--hero-fg); font-family: var(--display); }
   </div>
 </header>
 
+<div class="qr-modal" id="qr-modal" role="dialog" aria-modal="true" aria-labelledby="qr-title" hidden>
+  <div class="qr-card">
+    <button class="qr-close" id="qr-close" type="button" aria-label="Cerrar">&times;</button>
+    <p class="eyebrow">Evento · 28 de noviembre</p>
+    <h2 id="qr-title">Escanea para inscribirte</h2>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAggAAAIIAQAAAAAjhyvOAAAEE0lEQVR42u2dTW7jWAyEqyQD8k59A/VNFCAHk3yysU4yzg3snQVIqlm8HymbDtCzeyounMSwvwCECb4i+WgK/9MqmGCCCSaYYIIJJpyRAEl67n8ObwzS2GgEeklLetzQbegkbfuLW0myJ00oj3CJ0RF+zFc0AoCZgzBdlvD09Knwii+i+xfdIzxNe9KEsvNFSBk5WUjSAtSSdA+JY0MnPSht6LaQLJwvTDDhh4yz23wFOIxALQDTB1AvWC/9P4CqbrMnTTglodHYiOQIYOUH0M9kozsAaiJ/25MmnIfQStIYxPuLknjBdEEv3RppwVThK/83HuW+PWlCsQQGuwIzRwAzNXNYgJXDzI+Vw4ZuZb8F/R7MnjShaOX+3cZGegO1tABAL91r3QEgFXu/mT1pQrlx8cTwBnJRCxhSUAS7IxaywiHqQckVLRPKJrwYFLcktuI1xki/YEr1qj5VoroNXxW6Lb7JnjSh/HNUThbvlCwW9KEJsgHUI2WN1ARxvjCh5LgAMCiWpIYcJgtQ617H6IhBQT0YzlHWFyaUTmjFK26k3sBMXmPzItiU+xe1HsotDP6yJ00ok5D0w4togOZ9a4UZmIlaU6PpE1jZL+nsJHZbBQCiPWmCCT8rlCcGSW8ECT8iKpR7elksbQV5kn6xQjGh5Lh4Am0cWRxTUERLfRAAyIOLzG9yXJhQclzsFa13yhdpoBdAH+6AHPKFOyAmlE9oBeBGstXYaJwZylmh/RHkyVThi/xNPQAA3epJEhNOkC+eQBggaWIfJN4B+d43zxaiw/nChMJ1d+59JOmtMFhV79L7m8qQz1EmlE54Ea/Y+xibeJQa0/WNYYlHqagvRNaaKnvShPL1BTuxFdt0pylI79AcrGNb8KGoL0Ir5Jc9aUKxhAsAvNJnfGZ6ZLgJixXTZZk+NX0QFFSBG1QBnjw04QT64hk1RSzVHiwcosBdcXc6FnftSRNM+FNk7dO8QaSEkcVl75uHxkdebNJ6dtGE0uMif8rHdD0qb/vJ/cF9mtcVLRPOEBdP5MULUbM36fbHsdLLOGQVEsfTHRATis8XAHBYDafDIapOM4eHQxRohWLCCfLFE8BBs4ctu0Gz5/4g9xW71hcmnEJ3H6/TBuld646YMnToDO6P1hcmlE14MVucVJ+Zb5fHzYcbEG4LpkdPHppwBt2dk0VUGcvhBJV2LzhfmHBOfREOUXt5qo7zh0or2aNZd5twKkKjEbiRcUZ95jBzmMkKAL6qo/r27gUTTkOYGW428YJ+wdTo1uh2id/6dLRW9qQJJvxEyFvZs3KXbo3uaedP3srerWStB/BiOL7ZkyYUS9i3sgMAbq1IfqzxAkgvaT18f4fCenafxEwolUB/j7kJJphgggkmmGDCX9l/CY7psdVLuJ4AAAAASUVORK5CYII=" width="260" height="260" alt="Código QR del formulario de inscripción al evento del 28 de noviembre">
+    <p class="qr-help">Abre la cámara de tu celular y apunta al código.</p>
+    <a class="btn btn-main qr-link" href="https://forms.gle/LXhqiD28fVWuTfHt7" target="_blank" rel="noopener">Abrir el formulario</a>
+  </div>
+</div>
 <main>
 <section class="evento" id="registro" aria-label="Registro al evento del 28 de noviembre">
   <div class="wrap">
@@ -340,8 +362,7 @@ footer b { color: var(--hero-fg); font-family: var(--display); }
         <div><b id="cd-m">--</b><span>min</span></div>
       </div>
       <div class="reg-cta">
-        <a class="btn btn-main" id="reg-btn" href="#registro">Registrarme</a>
-        <p class="reg-note" id="reg-note" hidden>El enlace de registro aún no está configurado.</p>
+        <button class="btn btn-main" id="reg-btn" type="button" aria-haspopup="dialog" aria-controls="qr-modal">Inscribirme</button>
       </div>
     </div>
   </div>
@@ -721,10 +742,8 @@ footer b { color: var(--hero-fg); font-family: var(--display); }
 })();
 
 (function () {
-  var REGISTRO_URL = ""; /* pega aquí el enlace del formulario de registro */
   var target = new Date("2026-11-28T00:00:00-05:00").getTime();
   var d = document.getElementById("cd-d"), h = document.getElementById("cd-h"), m = document.getElementById("cd-m");
-  var btn = document.getElementById("reg-btn"), note = document.getElementById("reg-note");
   function tick() {
     var left = target - Date.now();
     if (left <= 0) { d.textContent = h.textContent = m.textContent = "0"; return; }
@@ -733,8 +752,13 @@ footer b { color: var(--hero-fg); font-family: var(--display); }
     m.textContent = Math.floor(left % 36e5 / 6e4);
   }
   tick(); setInterval(tick, 30000);
-  if (REGISTRO_URL) { btn.href = REGISTRO_URL; btn.target = "_blank"; btn.rel = "noopener"; }
-  else btn.addEventListener("click", function (e) { e.preventDefault(); note.hidden = false; });
+  var btn = document.getElementById("reg-btn"), modal = document.getElementById("qr-modal"), closeBtn = document.getElementById("qr-close");
+  function open() { modal.hidden = false; closeBtn.focus(); }
+  function close() { modal.hidden = true; btn.focus(); }
+  btn.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+  modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !modal.hidden) close(); });
 })();
 </script>
 
